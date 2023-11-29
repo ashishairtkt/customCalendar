@@ -1,0 +1,106 @@
+.fields_wrapper {
+  width: 600px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .boxs {
+    border: 1px solid lightgray;
+    color: grey;
+    padding: 15px 20px;
+    margin: 15px;
+  }
+}
+
+.wrapper-box {
+  width: 700px;
+  height: 700px;
+  padding: 10px;
+  position: relative;
+  border: 1px solid lightgray;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+
+  .wrapper_date {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    .dp,
+    .rt {
+      width: 100%;
+      cursor: pointer;
+      &:hover {
+        color: #4560ac;
+      }
+      border-bottom: 1px solid lightgray;
+      &.active {
+        color: #4560ac;
+        border-bottom: 1px solid #4560ac;
+      }
+      .dp_date {
+        display: flex;
+        align-items: flex-end;
+        font-size: 26px;
+        font-weight: bold;
+
+        span {
+          font-size: 15px;
+          font-weight: normal;
+          line-height: 16px;
+        }
+      }
+    }
+
+    .closebtn {
+      font-size: 16px;
+      border-radius: 50%;
+      height: 25px;
+      width: 25px;
+      border: 2px solid #4560ac;
+      padding: 7px;
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 10px;
+    }
+  }
+
+  .curdate {
+    text-align: center;
+    padding: 10px;
+  }
+
+  .bottom_section {
+    border-top: 1px solid lightgray;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    left: 0;
+
+    .bottom_tripname {
+      color: #4560ac;
+      font-weight: bold;
+    }
+
+    .btnboxs_wrapper {
+      display: flex;
+      gap: 10px;
+
+      .btn-boxs {
+        border: 1px solid #4560ac;
+        background-color: white;
+        color: #4560ac;
+        padding: 5px 10px;
+        cursor: pointer;
+
+        &:hover {
+          background-color: #f3f6fd;
+        }
+      }
+    }
+  }
+}
