@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Container, Row, Col } from "react-bootstrap";
+import Calendar from "./Calendar/Calendar";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
@@ -91,7 +92,7 @@ export default function Home() {
               <div className="curdate"> Today is {date}</div>
             </div>
 
-            <div className="row"></div>
+            <div className="row"> <Calendar /></div>
 
             <div className="bottom_section">
 <div className="bottom_tripname">
