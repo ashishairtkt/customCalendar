@@ -5,40 +5,37 @@ import Calendar from "./Calendar/Calendar";
 export default function Home() {
   const [open, setOpen] = useState(false);
 
-  const[activeTrip,setactiveTrip]=useState("depart")
+  const [activeTrip, setactiveTrip] = useState("depart");
 
-  const handleActiveTrip=(type)=>{
-    if(type==="dp")
-    setactiveTrip("depart")
-    else
-    setactiveTrip("return")
-  }
+  const [dpDate, setDpDate] = useState();
+  const [rtDate, setRtDate] = useState();
 
-  const isTripActive=(type)=>{
-    if(activeTrip===type)
-    return "active"
-    else
-    return ""
+  const handleActiveTrip = (type) => {
+    if (type === "dp") setactiveTrip("depart");
+    else setactiveTrip("return");
+  };
 
-  }
-  const [selectedCar, setSelectedCar] = useState('');
+  const isTripActive = (type) => {
+    if (activeTrip === type) return "active";
+    else return "";
+  };
+  const [selectedCar, setSelectedCar] = useState("");
 
   const handleCarChange = (event) => {
     setSelectedCar(event.target.value);
   };
 
   const carOptions = [
-    { value: 'volvo', label: 'Volvo' },
-    { value: 'saab', label: 'Saab' },
-    { value: 'mercedes', label: 'Mercedes' },
-    { value: 'audi', label: 'Audi' },
+    { value: "volvo", label: "Volvo" },
+    { value: "saab", label: "Saab" },
+    { value: "mercedes", label: "Mercedes" },
+    { value: "audi", label: "Audi" },
   ];
   let currentDate = new Date();
   let day = currentDate.getDay();
   let month = currentDate.getMonth();
   let year = currentDate.getFullYear();
   let date = `${month} ${day}, ${year}`;
-
 
   const Select = ({ id, name, options, onChange }) => {
     return (
@@ -63,25 +60,48 @@ export default function Home() {
 
           <div className="wrapper-box">
             <div className=" wrapper_date">
-              <div className={`dp ${isTripActive("depart")}`}  onClick={()=>handleActiveTrip("dp")}>
+              <div
+                className={`dp ${isTripActive("depart")}`}
+                onClick={() => handleActiveTrip("dp")}
+              >
                 <label>Depart</label>
                 <div className="dp_date">
-                  30
-                  <span>
-                   Nov
-                    <br/>Thu
-                  </span>
+               
+                  {dpDate !== undefined ? (
+                    <>
+                      {" "}
+                      {dpDate && dpDate[2]}
+                      <span>
+                        {dpDate && dpDate[1]}
+                        <br />
+                        {dpDate && dpDate[0]}
+                      </span>
+                    </>
+                  ) : (
+                    <>Select Date</>
+                  )}
                 </div>
               </div>
 
-              <div className={`rt ${isTripActive("return")}`} onClick={()=>handleActiveTrip("rt")}>
+              <div
+                className={`rt ${isTripActive("return")}`}
+                onClick={() => handleActiveTrip("rt")}
+              >
                 <label>Return</label>
                 <div className="dp_date">
-                  01
-                  <span>
-                  Dec
-                    <br/>Fri
-                  </span>
+                {rtDate !== undefined ? (
+                    <>
+                      {" "}
+                      {rtDate && rtDate[2]}
+                      <span>
+                        {rtDate && rtDate[1]}
+                        <br />
+                        {rtDate && rtDate[0]}
+                      </span>
+                    </>
+                  ) : (
+                    <p>Select Return Date for Savings!</p>
+                  )}
                 </div>
               </div>
 
@@ -92,37 +112,41 @@ export default function Home() {
               <div className="curdate"> Today is {date}</div>
             </div>
 
-            <div className="row"> <Calendar /></div>
+            <div className="row">
+              {" "}
+              <Calendar
+                setDpDate={setDpDate}
+                dpDate={dpDate}
+                setRtDate={setRtDate}
+                rtDate={rtDate}
+                activeTrip={activeTrip}
+                setactiveTrip={setactiveTrip}
+              />
+            </div>
 
             <div className="bottom_section">
-<div className="bottom_tripname">
-    1 Day Trip
-</div>
+              <div className="bottom_tripname">1 Day Trip</div>
 
-<div> 
-    Current month:  <Select
-        id="cars"
-        name="cars"
-        options={carOptions}
-        onChange={handleCarChange}
-      /> <Select
-      id="cars"
-      name="cars"
-      options={carOptions}
-      onChange={handleCarChange}
-    />
+              <div>
+                Current month:{" "}
+                <Select
+                  id="cars"
+                  name="cars"
+                  options={carOptions}
+                  onChange={handleCarChange}
+                />{" "}
+                <Select
+                  id="cars"
+                  name="cars"
+                  options={carOptions}
+                  onChange={handleCarChange}
+                />
+              </div>
 
-</div>
-
-<div className="btnboxs_wrapper">
-
-    <button className="btn-boxs">
-        Reset
-    </button>
-    <button className="btn-boxs">
-        Done
-    </button>
-</div>
+              <div className="btnboxs_wrapper">
+                <button className="btn-boxs">Reset</button>
+                <button className="btn-boxs">Done</button>
+              </div>
             </div>
           </div>
         </Col>

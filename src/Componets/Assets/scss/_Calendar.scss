@@ -16,7 +16,6 @@
     align-items: center;
 
     .calendar_boxone {
-   
       width: 100%;
       height: 250px;
 
@@ -27,38 +26,73 @@
           padding: 10px;
         }
       }
-
-      .dates {
-        padding: 5px;
-        cursor: pointer;
-        align-items: center;
-        display: flex;
-        justify-content: center;
-    
-      &.activedate {
-          border-bottom: 1px solid #4560ac;
-      }
-
-      
-   
-        span {
+      .dates_wrapper {
+        position: relative;
+        font {
+          font-size: 12px;
+          color: #4560ac;
+          position: absolute;
+          font-weight: bold;
+          letter-spacing: 0px;
+          top: 32px;
+          width: 70px;
+          left: -12px;
+        }
+        .dates {
+          padding: 5px;
+          cursor: pointer;
+          align-items: center;
           display: flex;
-          width: 30px;
-          height: 30px;
           justify-content: center;
 
-          &.active {
-            border-radius: 50%;
-            background-color: #4560ac;
-            color: white;
+          &.activedate {
+            border-bottom: 1px solid #4560ac;
+          }
+          &.disabledate {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+
+          span {
+            display: flex;
             width: 30px;
             height: 30px;
-            align-items: center;
+            justify-content: center;
+            border: 2px solid transparent;
+            border-radius: 50%;
+
+            &:hover {
+              border-radius: 50%;
+              background-color: white;
+              color: #4560ac;
+              width: 30px;
+              height: 30px;
+              align-items: center;
+              border: 2px solid #4560ac;
+            }
+            &.active {
+              border-radius: 50%;
+              background-color: #4560ac;
+              color: white;
+              width: 30px;
+              height: 30px;
+              align-items: center;
+              border: 2px solid transparent;
+            }
+
+            &.active_Return {
+              border-radius: 50%;
+              background-color: white;
+              color: #4560ac;
+              width: 30px;
+              height: 30px;
+              align-items: center;
+              border: 2px solid #4560ac;
+            }
           }
         }
       }
-
-      .empty{
+      .empty {
         visibility: hidden;
       }
     }

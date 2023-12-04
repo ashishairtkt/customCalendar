@@ -26,20 +26,35 @@ function getFormattedDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", options);
 }
-export default function Calendar() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+export default function Calendar(props) {
+  const [selectedDate, setSelectedDate] = useState();
   const [selectedDateNext, setSelectedDateNext] = useState();
   const [currentMonthdates, setcurrentMonthDates] = useState([]);
   const [NextMonthdates, setNextMonthdates] = useState([]);
   const [calendarValue, setCalendar] = useState({
-    month: selectedDate.getMonth(),
-    year: selectedDate.getFullYear(),
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
   });
   const [calendarValueNext, setCalendarNext] = useState();
-
+  const [totalDaysJourney, settotalDaysJourney] = useState();
   const activeDate = (date) => {
     if (getFormattedDate(date.date) === getFormattedDate(selectedDate)) {
       return "active";
+    } else {
+      return "";
+    }
+  };
+
+  const isStartdp=()=>{
+
+  }
+  const isenddp=()=>{
+    
+  }
+
+  const isactiveReturnDate = (date) => {
+    if (getFormattedDate(date.date) === getFormattedDate(selectedDateNext)) {
+      return "active_Return";
     } else {
       return "";
     }
@@ -53,6 +68,33 @@ export default function Calendar() {
     }
   };
 
+  useEffect(() => {
+    if (selectedDate !== undefined) {
+      props.setDpDate(formatDateArray(selectedDate));
+    }
+
+    if (selectedDateNext !== undefined) {
+      props.setRtDate(formatDateArray(selectedDateNext));
+    }
+  }, [selectedDate, selectedDateNext]);
+
+  function formatDateArray(inputDate) {
+    const date = new Date(inputDate); // Convert input string to a Date object
+    const options = {
+      weekday: "short",
+      month: "short",
+      day: "2-digit",
+      year: "numeric",
+    };
+    const formattedDate = date.toLocaleDateString("en-US", options).split(" "); // Format date according to specified options and split into an array
+    const outputArray = [
+      formattedDate[0],
+      formattedDate[1],
+      formattedDate[2],
+      formattedDate[3],
+    ]; // Arrange in the required order
+    return outputArray;
+  }
   useEffect(() => {
     const body = {
       month: calendarValue.month,
@@ -98,7 +140,6 @@ export default function Calendar() {
 
   const onClickNext = () => {
     let currentDate = new Date();
-    console.log(currentDate.getMonth(), calendarValueNext.month);
 
     if (currentDate.getMonth() - 1 > calendarValueNext.month) {
       const body = {
@@ -124,11 +165,7 @@ export default function Calendar() {
 
   const onClickPrevious = () => {
     let currentDate = new Date();
-    console.log(
-      currentDate.getMonth(),
-      calendarValue,
-      currentDate.getFullYear()
-    );
+
     if (
       (currentDate.getMonth() < calendarValue.month &&
         currentDate.getFullYear() === calendarValue.year) ||
@@ -155,7 +192,14 @@ export default function Calendar() {
   };
 
   const onSelectDate = (date) => {
-    setSelectedDate(new Date(date.date));
+    onJourneyDays(date)
+    if (props.activeTrip === "depart") {
+      setSelectedDate(new Date(date.date));
+
+      props.setactiveTrip("return");
+    } else if (props.activeTrip === "return") {
+      setSelectedDateNext(new Date(date.date));
+    }
   };
 
   const handleSelectMonth = (selectedMonth) => {
@@ -180,20 +224,88 @@ export default function Calendar() {
   };
 
   const isCurrentDateActive = (crdate) => {
-    let currentDate = new Date();
-    let activeDate = new Date(crdate.date);
+    const currentDate = new Date(); // Get the current date
 
-    // Set both dates to the same day for accurate comparison
-    currentDate.setHours(0, 0, 0, 0);
-    activeDate.setHours(0, 0, 0, 0);
+    // Convert the other date string to a Date object
+    const dateParts = `${crdate.date}`.split(" ");
+    const monthAbbreviations = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+    const monthIndex = monthAbbreviations.indexOf(dateParts[1]);
+    const year = parseInt(dateParts[3], 10);
+    const day = parseInt(dateParts[2], 10);
+    const otherDateObj = new Date(year, monthIndex, day);
+    const timeDifference = otherDateObj - currentDate;
 
-    if (currentDate.getTime() === activeDate.getTime()) {
+    // Convert milliseconds to days
+    const millisecondsInADay = 1000 * 60 * 60 * 24; // 1 day = 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+    const differenceInDays = Math.floor(timeDifference / millisecondsInADay);
+
+    // Compare the dates
+    if (currentDate.toDateString() === otherDateObj.toDateString()) {
       return "activedate";
-    } else return "";
+    } else if (currentDate > otherDateObj) {
+      return "disabledate";
+    } else {
+      return "";
+    }
+  };
+
+  function createDateFromString(dateString) {
+    const monthAbbreviations = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const dateParts = `${dateString}`.split(" ");
+    const monthIndex = monthAbbreviations.indexOf(dateParts[1]);
+    const year = parseInt(dateParts[3], 10);
+    const day = parseInt(dateParts[2], 10);
+
+    return new Date(year, monthIndex, day);
+  }
+  const onJourneyDays = (days) => {
+    if (selectedDate !== undefined) {
+      // Convert the other date string to a Date object
+      const currentDate = createDateFromString(selectedDate);
+      const otherDateObj = createDateFromString(days.date);
+
+      const timeDifference = otherDateObj - currentDate;
+
+      // Convert milliseconds to days
+      const millisecondsInADay = 1000 * 60 * 60 * 24; // 1 day = 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
+      const differenceInDays = Math.floor(timeDifference / millisecondsInADay);
+
+      settotalDaysJourney([differenceInDays, days.date]);
+    } else {
+      settotalDaysJourney(null);
+    }
   };
 
 
-  console.log(selectedDate,"selectedDate")
+  console.log(totalDaysJourney,"totalDaysJourney")
+
   return (
     <div className="calendar_wrapper">
       <div>
@@ -245,16 +357,37 @@ export default function Calendar() {
                               each.weekday.startsWith(day)
                             ) {
                               return (
-                                <td key={JSON.stringify(each)}>
-                                  <div
-                                    onClick={() => onSelectDate(each)}
-                                    className={`dates ${isActivemonthDays(
-                                      each
-                                    )}${isCurrentDateActive(each)}  `}
-                                  >
-                                    <span className={`${activeDate(each)}`}>
-                                      {each.day}
-                                    </span>
+                                <td key={JSON.stringify(each)} className={`${isStartdp(each)}`}>
+                                  <div className="dates_wrapper">
+                                    <div
+                                      onClick={() => onSelectDate(each)}
+                                      // onMouseEnter={() => {
+                                      //   onJourneyDays(each);
+                                      // }}
+                                      // onMouseLeave={() => {
+                                      //   onJourneyDays(each);
+                                      // }}
+                                      className={`dates ${isActivemonthDays(
+                                        each
+                                      )}${isCurrentDateActive(each)}  `}
+                                    >
+                                      <span
+                                        className={`${activeDate(
+                                          each
+                                        )} ${isactiveReturnDate(each)}`}
+                                      >
+                                        {each.day}
+                                      </span>
+
+                                    
+                                    </div>
+                                    {totalDaysJourney !== undefined &&
+                                         totalDaysJourney !== null&&isactiveReturnDate(each)==="active_Return"
+                                        && (
+                                          <font>
+                                           {totalDaysJourney[0]}&nbsp;days trip
+                                          </font>
+                                        )}
                                   </div>
                                 </td>
                               );
@@ -292,15 +425,34 @@ export default function Calendar() {
                             ) {
                               return (
                                 <td key={JSON.stringify(each)}>
-                                  <div
-                                    onClick={() => onSelectDate(each)}
-                                    className={`dates ${isActivemonthDays(
-                                      each
-                                    )}`}
-                                  >
-                                    <span className={`${activeDate(each)}`}>
-                                      {each.day}
-                                    </span>
+                                  <div className="dates_wrapper">
+                                    <div
+                                      onClick={() => onSelectDate(each)}
+                                      className={`dates ${isActivemonthDays(
+                                        each
+                                      )}`}
+                                      // onMouseEnter={() => {
+                                      //   onJourneyDays(each);
+                                      // }}
+                                      // onMouseLeave={() => {
+                                      //   onJourneyDays(each);
+                                      // }}
+                                    >
+                                      <span
+                                        className={`${activeDate(
+                                          each
+                                        )} ${isactiveReturnDate(each)}`}
+                                      >
+                                        {each.day}
+                                      </span>
+                                    </div>
+                                    {totalDaysJourney !== undefined &&
+                                        totalDaysJourney !== null&&isactiveReturnDate(each)==="active_Return"
+                                        && (
+                                          <font>
+                                             {totalDaysJourney[0]}&nbsp;days trip
+                                          </font>
+                                        )}
                                   </div>
                                 </td>
                               );
