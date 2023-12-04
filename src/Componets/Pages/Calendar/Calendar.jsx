@@ -37,6 +37,30 @@ export default function Calendar(props) {
   });
   const [calendarValueNext, setCalendarNext] = useState();
   const [totalDaysJourney, settotalDaysJourney] = useState();
+
+  function createDateFromString(dateString) {
+    const monthAbbreviations = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const dateParts = `${dateString}`.split(" ");
+    const monthIndex = monthAbbreviations.indexOf(dateParts[1]);
+    const year = parseInt(dateParts[3], 10);
+    const day = parseInt(dateParts[2], 10);
+
+    return new Date(year, monthIndex, day);
+  }
   const activeDate = (date) => {
     if (getFormattedDate(date.date) === getFormattedDate(selectedDate)) {
       return "active";
@@ -45,12 +69,23 @@ export default function Calendar(props) {
     }
   };
 
-  const isStartdp=()=>{
+  const isStartdp = (date) => {
+    const currentdate = new Date(date.date);
 
-  }
-  const isenddp=()=>{
-    
-  }
+    if (getFormattedDate(date.date) === getFormattedDate(selectedDate)) {
+      return "dpstart";
+    }
+    if (getFormattedDate(date.date) === getFormattedDate(selectedDateNext)) {
+      return "rtstart";
+    } else if (
+      new Date(selectedDate) < currentdate &&
+      new Date(selectedDateNext) > currentdate
+    ) {
+      return "bgcolordate";
+    } else {
+      return "";
+    }
+  };
 
   const isactiveReturnDate = (date) => {
     if (getFormattedDate(date.date) === getFormattedDate(selectedDateNext)) {
@@ -192,7 +227,7 @@ export default function Calendar(props) {
   };
 
   const onSelectDate = (date) => {
-    onJourneyDays(date)
+    onJourneyDays(date);
     if (props.activeTrip === "depart") {
       setSelectedDate(new Date(date.date));
 
@@ -262,29 +297,6 @@ export default function Calendar(props) {
     }
   };
 
-  function createDateFromString(dateString) {
-    const monthAbbreviations = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    const dateParts = `${dateString}`.split(" ");
-    const monthIndex = monthAbbreviations.indexOf(dateParts[1]);
-    const year = parseInt(dateParts[3], 10);
-    const day = parseInt(dateParts[2], 10);
-
-    return new Date(year, monthIndex, day);
-  }
   const onJourneyDays = (days) => {
     if (selectedDate !== undefined) {
       // Convert the other date string to a Date object
@@ -303,8 +315,7 @@ export default function Calendar(props) {
     }
   };
 
-
-  console.log(totalDaysJourney,"totalDaysJourney")
+  console.log(totalDaysJourney, "totalDaysJourney");
 
   return (
     <div className="calendar_wrapper">
@@ -357,7 +368,10 @@ export default function Calendar(props) {
                               each.weekday.startsWith(day)
                             ) {
                               return (
-                                <td key={JSON.stringify(each)} className={`${isStartdp(each)}`}>
+                                <td
+                                  key={JSON.stringify(each)}
+                                  className={`${isStartdp(each)} `}
+                                > 
                                   <div className="dates_wrapper">
                                     <div
                                       onClick={() => onSelectDate(each)}
@@ -378,16 +392,15 @@ export default function Calendar(props) {
                                       >
                                         {each.day}
                                       </span>
-
-                                    
                                     </div>
                                     {totalDaysJourney !== undefined &&
-                                         totalDaysJourney !== null&&isactiveReturnDate(each)==="active_Return"
-                                        && (
-                                          <font>
-                                           {totalDaysJourney[0]}&nbsp;days trip
-                                          </font>
-                                        )}
+                                      totalDaysJourney !== null &&
+                                      isactiveReturnDate(each) ===
+                                        "active_Return" && (
+                                        <font>
+                                          {totalDaysJourney[0]}&nbsp;days trip
+                                        </font>
+                                      )}
                                   </div>
                                 </td>
                               );
@@ -424,7 +437,10 @@ export default function Calendar(props) {
                               each.weekday.startsWith(day)
                             ) {
                               return (
-                                <td key={JSON.stringify(each)}>
+                                <td
+                                  key={JSON.stringify(each)}
+                                  className={`${isStartdp(each)}`}
+                                >
                                   <div className="dates_wrapper">
                                     <div
                                       onClick={() => onSelectDate(each)}
@@ -447,12 +463,13 @@ export default function Calendar(props) {
                                       </span>
                                     </div>
                                     {totalDaysJourney !== undefined &&
-                                        totalDaysJourney !== null&&isactiveReturnDate(each)==="active_Return"
-                                        && (
-                                          <font>
-                                             {totalDaysJourney[0]}&nbsp;days trip
-                                          </font>
-                                        )}
+                                      totalDaysJourney !== null &&
+                                      isactiveReturnDate(each) ===
+                                        "active_Return" && (
+                                        <font>
+                                          {totalDaysJourney[0]}&nbsp;days trip
+                                        </font>
+                                      )}
                                   </div>
                                 </td>
                               );
