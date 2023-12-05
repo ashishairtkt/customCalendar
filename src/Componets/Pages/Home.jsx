@@ -3,12 +3,13 @@ import { Container, Row, Col } from "react-bootstrap";
 import Calendar from "./Calendar/Calendar";
 
 export default function Home() {
-  const [open, setOpen] = useState(false);
+ 
 
   const [activeTrip, setactiveTrip] = useState("depart");
-
+  const [restState, setrestState] = useState(false);
   const [dpDate, setDpDate] = useState();
   const [rtDate, setRtDate] = useState();
+  const [totalDaysJourney, settotalDaysJourney] = useState();
 
   const handleActiveTrip = (type) => {
     if (type === "dp") setactiveTrip("depart");
@@ -49,6 +50,11 @@ export default function Home() {
     );
   };
 
+  const handleReset = () => {
+    setactiveTrip("depart");
+    setrestState(true);
+  };
+
   return (
     <Container>
       <Row>
@@ -66,15 +72,13 @@ export default function Home() {
               >
                 <label>Depart</label>
                 <div className="dp_date">
-               
-                  {dpDate !== undefined ? (
+                  {dpDate !== undefined && dpDate[2] !== undefined ? (
                     <>
-                      {" "}
-                      {dpDate && dpDate[2]}
+                      {dpDate && dpDate[2].replace(/,/g, "")}
                       <span>
-                        {dpDate && dpDate[1]}
+                        {dpDate && dpDate[1].replace(/,/g, "")}
                         <br />
-                        {dpDate && dpDate[0]}
+                        {dpDate && dpDate[0].replace(/,/g, "")}
                       </span>
                     </>
                   ) : (
@@ -89,14 +93,14 @@ export default function Home() {
               >
                 <label>Return</label>
                 <div className="dp_date">
-                {rtDate !== undefined ? (
+                  {rtDate !== undefined && rtDate[2] !== undefined ? (
                     <>
                       {" "}
-                      {rtDate && rtDate[2]}
+                      {rtDate && rtDate[2].replace(/,/g, "")}
                       <span>
-                        {rtDate && rtDate[1]}
+                        {rtDate && rtDate[1].replace(/,/g, "")}
                         <br />
-                        {rtDate && rtDate[0]}
+                        {rtDate && rtDate[0].replace(/,/g, "")}
                       </span>
                     </>
                   ) : (
@@ -121,11 +125,28 @@ export default function Home() {
                 rtDate={rtDate}
                 activeTrip={activeTrip}
                 setactiveTrip={setactiveTrip}
+                restState={restState}
+                setrestState={setrestState}
+                settotalDaysJourney={settotalDaysJourney}
+                totalDaysJourney={totalDaysJourney}
               />
             </div>
 
             <div className="bottom_section">
-              <div className="bottom_tripname">1 Day Trip</div>
+              <div className="bottom_tripname">
+                {" "}
+                {totalDaysJourney !== undefined &&
+                  totalDaysJourney !== null &&
+                  isNaN(totalDaysJourney[0]) !== true && (
+                    <font>
+                      {totalDaysJourney[0] === 0 ? (
+                        "Same day trip"
+                      ) : (
+                        <>{totalDaysJourney[0]}&nbsp;days trip</>
+                      )}
+                    </font>
+                  )}
+              </div>
 
               <div>
                 Current month:{" "}
@@ -144,7 +165,9 @@ export default function Home() {
               </div>
 
               <div className="btnboxs_wrapper">
-                <button className="btn-boxs">Reset</button>
+                <button className="btn-boxs" onClick={() => handleReset()}>
+                  Reset
+                </button>
                 <button className="btn-boxs">Done</button>
               </div>
             </div>

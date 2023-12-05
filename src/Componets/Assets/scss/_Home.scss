@@ -40,15 +40,19 @@
       .dp_date {
         display: flex;
         align-items: flex-end;
-        font-size: 26px;
+        font-size: 30px;
         font-weight: bold;
         p {
           font-size: 20px;
         }
         span {
-          font-size: 15px;
+          font-size: 13px;
           font-weight: normal;
-          line-height: 16px;
+          line-height: 12px;
+          position: relative;
+          top: -10px;
+          left: 5px;
+      
         }
       }
     }

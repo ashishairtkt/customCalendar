@@ -28,8 +28,14 @@
       }
 
       .bgcolordate {
-
         background-color: #ebf1fe;
+      }
+
+      .startdp {
+        background: linear-gradient(90deg, white 40%, #ebf1fe 60%);
+      }
+      .endrt {
+        background: linear-gradient(90deg, #ebf1fe 50%, white 50%);
       }
       .dates_wrapper {
         position: relative;
@@ -44,7 +50,8 @@
           left: -8px;
         }
         .dates {
-          padding: 5px;
+          width: 36px;
+          height: 36px;
           cursor: pointer;
           align-items: center;
           display: flex;
@@ -60,18 +67,18 @@
 
           span {
             display: flex;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             justify-content: center;
             border: 2px solid transparent;
             border-radius: 50%;
-
+            align-items: center;
             &:hover {
               border-radius: 50%;
               background-color: white;
               color: #4560ac;
-              width: 30px;
-              height: 30px;
+              width: 36px;
+              height: 36px;
               align-items: center;
               border: 2px solid #4560ac;
             }
@@ -79,8 +86,8 @@
               border-radius: 50%;
               background-color: #4560ac;
               color: white;
-              width: 30px;
-              height: 30px;
+              width: 36px;
+              height: 36px;
               align-items: center;
               border: 2px solid transparent;
             }
@@ -89,8 +96,8 @@
               border-radius: 50%;
               background-color: white;
               color: #4560ac;
-              width: 30px;
-              height: 30px;
+              width: 36px;
+              height: 36px;
               align-items: center;
               border: 2px solid #4560ac;
             }

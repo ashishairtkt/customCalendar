@@ -27,6 +27,8 @@ function getFormattedDate(dateString) {
   return date.toLocaleDateString("en-US", options);
 }
 export default function Calendar(props) {
+
+  const {totalDaysJourney,settotalDaysJourney}=props
   const [selectedDate, setSelectedDate] = useState();
   const [selectedDateNext, setSelectedDateNext] = useState();
   const [currentMonthdates, setcurrentMonthDates] = useState([]);
@@ -36,7 +38,23 @@ export default function Calendar(props) {
     year: new Date().getFullYear(),
   });
   const [calendarValueNext, setCalendarNext] = useState();
-  const [totalDaysJourney, settotalDaysJourney] = useState();
+
+
+  useEffect(() => {
+    if (props.restState) {
+      setSelectedDate("");
+      setSelectedDateNext("");
+  
+      setCalendar({
+        month: new Date().getMonth(),
+        year: new Date().getFullYear(),
+      });
+ 
+      settotalDaysJourney(null);
+
+      props.setrestState(false);
+    }
+  }, [props.restState]);
 
   function createDateFromString(dateString) {
     const monthAbbreviations = [
@@ -69,14 +87,28 @@ export default function Calendar(props) {
     }
   };
 
+
+
   const isStartdp = (date) => {
     const currentdate = new Date(date.date);
 
     if (getFormattedDate(date.date) === getFormattedDate(selectedDate)) {
-      return "dpstart";
+      if (
+        getFormattedDate(selectedDate) === getFormattedDate(selectedDateNext)
+      ) {
+        return "dpstart";
+      } else if (selectedDate !== undefined && selectedDateNext !== undefined&& selectedDateNext !== "") {
+        return "dpstart startdp";
+      }
     }
     if (getFormattedDate(date.date) === getFormattedDate(selectedDateNext)) {
-      return "rtstart";
+      if (
+        getFormattedDate(selectedDate) === getFormattedDate(selectedDateNext)
+      ) {
+        return "rtstart";
+      } else if (selectedDate !== undefined && selectedDateNext !== undefined&& selectedDateNext !== "") {
+        return "rtstart endrt";
+      }
     } else if (
       new Date(selectedDate) < currentdate &&
       new Date(selectedDateNext) > currentdate
@@ -111,7 +143,7 @@ export default function Calendar(props) {
     if (selectedDateNext !== undefined) {
       props.setRtDate(formatDateArray(selectedDateNext));
     }
-  }, [selectedDate, selectedDateNext]);
+  }, [selectedDate, selectedDateNext, props.restState]);
 
   function formatDateArray(inputDate) {
     const date = new Date(inputDate); // Convert input string to a Date object
@@ -132,8 +164,8 @@ export default function Calendar(props) {
   }
   useEffect(() => {
     const body = {
-      month: calendarValue.month,
-      year: calendarValue.year,
+      month: new Date().getMonth(),
+      year: new Date().getFullYear(),
     };
 
     const { calendar, month, next, previous, year } = getCalendar(
@@ -149,7 +181,7 @@ export default function Calendar(props) {
       previous,
       year,
     });
-  }, []);
+  }, [props.restState]);
 
   useEffect(() => {
     if (calendarValue !== undefined && calendarValue.next !== undefined) {
@@ -237,26 +269,7 @@ export default function Calendar(props) {
     }
   };
 
-  const handleSelectMonth = (selectedMonth) => {
-    const body = {
-      month: months.indexOf(selectedMonth),
-      year: calendarValue.year,
-    };
 
-    const { calendar, month, next, previous, year } = getCalendar(
-      body.month,
-      body.year
-    );
-
-    setcurrentMonthDates([...calendar]);
-    setCalendar({
-      ...calendarValue,
-      month,
-      next,
-      previous,
-      year,
-    });
-  };
 
   const isCurrentDateActive = (crdate) => {
     const currentDate = new Date(); // Get the current date
@@ -315,8 +328,6 @@ export default function Calendar(props) {
     }
   };
 
-  console.log(totalDaysJourney, "totalDaysJourney");
-
   return (
     <div className="calendar_wrapper">
       <div>
@@ -371,7 +382,7 @@ export default function Calendar(props) {
                                 <td
                                   key={JSON.stringify(each)}
                                   className={`${isStartdp(each)} `}
-                                > 
+                                >
                                   <div className="dates_wrapper">
                                     <div
                                       onClick={() => onSelectDate(each)}
@@ -398,7 +409,14 @@ export default function Calendar(props) {
                                       isactiveReturnDate(each) ===
                                         "active_Return" && (
                                         <font>
-                                          {totalDaysJourney[0]}&nbsp;days trip
+                                          {totalDaysJourney[0] === 0 ? (
+                                            "Same day trip"
+                                          ) : (
+                                            <>
+                                              {totalDaysJourney[0]}&nbsp;days
+                                              trip
+                                            </>
+                                          )}
                                         </font>
                                       )}
                                   </div>
@@ -467,7 +485,14 @@ export default function Calendar(props) {
                                       isactiveReturnDate(each) ===
                                         "active_Return" && (
                                         <font>
-                                          {totalDaysJourney[0]}&nbsp;days trip
+                                          {totalDaysJourney[0] === 0 ? (
+                                            "Same day trip"
+                                          ) : (
+                                            <>
+                                              {totalDaysJourney[0]}&nbsp;days
+                                              trip
+                                            </>
+                                          )}
                                         </font>
                                       )}
                                   </div>
