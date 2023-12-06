@@ -29,8 +29,15 @@
 
       .bgcolordate {
         background-color: #ebf1fe;
+        cursor: pointer;
       }
-
+      .disabledate {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+      }
+      .wrapper_box{
+        cursor: pointer;
+      }
       .startdp {
         background: linear-gradient(90deg, white 40%, #ebf1fe 60%);
       }
@@ -45,20 +52,21 @@
           position: absolute;
           font-weight: bold;
           letter-spacing: 0px;
-          top: 32px;
+          top: 43px;
           width: 70px;
-          left: -8px;
+          left: -9px;
         }
         .dates {
-          width: 36px;
-          height: 36px;
-          cursor: pointer;
+          width: 45px;
+          height: 45px;
+          // cursor: pointer;
           align-items: center;
           display: flex;
           justify-content: center;
 
           &.activedate {
             border-bottom: 1px solid #4560ac;
+            
           }
           &.disabledate {
             opacity: 0.5;
@@ -67,8 +75,8 @@
 
           span {
             display: flex;
-            width: 36px;
-            height: 36px;
+            width: 45px;
+            height: 45px;
             justify-content: center;
             border: 2px solid transparent;
             border-radius: 50%;
@@ -77,8 +85,8 @@
               border-radius: 50%;
               background-color: white;
               color: #4560ac;
-              width: 36px;
-              height: 36px;
+              width: 45px;
+              height: 45px;
               align-items: center;
               border: 2px solid #4560ac;
             }
@@ -86,20 +94,22 @@
               border-radius: 50%;
               background-color: #4560ac;
               color: white;
-              width: 36px;
-              height: 36px;
+              width: 45px;
+              height: 45px;
               align-items: center;
               border: 2px solid transparent;
+              cursor: pointer;
             }
 
             &.active_Return {
               border-radius: 50%;
               background-color: white;
               color: #4560ac;
-              width: 36px;
-              height: 36px;
+              width: 45px;
+              height: 45px;
               align-items: center;
               border: 2px solid #4560ac;
+              cursor: pointer;
             }
           }
         }

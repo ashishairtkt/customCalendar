@@ -137,12 +137,12 @@ export default function Home() {
                 {" "}
                 {totalDaysJourney !== undefined &&
                   totalDaysJourney !== null &&
-                  isNaN(totalDaysJourney[0]) !== true && (
+                  isNaN(totalDaysJourney) !== true && (
                     <font>
-                      {totalDaysJourney[0] === 0 ? (
+                      {totalDaysJourney === 0 ? (
                         "Same day trip"
                       ) : (
-                        <>{totalDaysJourney[0]}&nbsp;days trip</>
+                        <>{totalDaysJourney}&nbsp;days trip</>
                       )}
                     </font>
                   )}

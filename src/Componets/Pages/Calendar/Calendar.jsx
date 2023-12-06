@@ -27,8 +27,7 @@ function getFormattedDate(dateString) {
   return date.toLocaleDateString("en-US", options);
 }
 export default function Calendar(props) {
-
-  const {totalDaysJourney,settotalDaysJourney}=props
+  const { totalDaysJourney, settotalDaysJourney } = props;
   const [selectedDate, setSelectedDate] = useState();
   const [selectedDateNext, setSelectedDateNext] = useState();
   const [currentMonthdates, setcurrentMonthDates] = useState([]);
@@ -39,17 +38,16 @@ export default function Calendar(props) {
   });
   const [calendarValueNext, setCalendarNext] = useState();
 
-
   useEffect(() => {
     if (props.restState) {
       setSelectedDate("");
       setSelectedDateNext("");
-  
+
       setCalendar({
         month: new Date().getMonth(),
         year: new Date().getFullYear(),
       });
- 
+
       settotalDaysJourney(null);
 
       props.setrestState(false);
@@ -87,17 +85,21 @@ export default function Calendar(props) {
     }
   };
 
-
-
   const isStartdp = (date) => {
     const currentdate = new Date(date.date);
 
     if (getFormattedDate(date.date) === getFormattedDate(selectedDate)) {
+      // if (
+      //   getFormattedDate(date.date) === getFormattedDate(selectedDate)
+      // ) {
+      //   return "dpstart";
+      // } else
+
       if (
-        getFormattedDate(selectedDate) === getFormattedDate(selectedDateNext)
+        selectedDate !== undefined &&
+        selectedDateNext !== undefined &&
+        selectedDateNext !== ""
       ) {
-        return "dpstart";
-      } else if (selectedDate !== undefined && selectedDateNext !== undefined&& selectedDateNext !== "") {
         return "dpstart startdp";
       }
     }
@@ -106,7 +108,11 @@ export default function Calendar(props) {
         getFormattedDate(selectedDate) === getFormattedDate(selectedDateNext)
       ) {
         return "rtstart";
-      } else if (selectedDate !== undefined && selectedDateNext !== undefined&& selectedDateNext !== "") {
+      } else if (
+        selectedDate !== undefined &&
+        selectedDateNext !== undefined &&
+        selectedDateNext !== ""
+      ) {
         return "rtstart endrt";
       }
     } else if (
@@ -114,8 +120,13 @@ export default function Calendar(props) {
       new Date(selectedDateNext) > currentdate
     ) {
       return "bgcolordate";
+    } else if (
+      new Date(selectedDate) > currentdate &&
+      props.activeTrip === "return"
+    ) {
+      return "disabledate";
     } else {
-      return "";
+      return "wrapper_box";
     }
   };
 
@@ -143,6 +154,8 @@ export default function Calendar(props) {
     if (selectedDateNext !== undefined) {
       props.setRtDate(formatDateArray(selectedDateNext));
     }
+
+    onJourneyDays();
   }, [selectedDate, selectedDateNext, props.restState]);
 
   function formatDateArray(inputDate) {
@@ -205,6 +218,8 @@ export default function Calendar(props) {
     }
   }, [calendarValue]);
 
+
+  console.log(NextMonthdates,"NextMonthdates",calendarValueNext)
   const onClickNext = () => {
     let currentDate = new Date();
 
@@ -259,17 +274,22 @@ export default function Calendar(props) {
   };
 
   const onSelectDate = (date) => {
-    onJourneyDays(date);
     if (props.activeTrip === "depart") {
-      setSelectedDate(new Date(date.date));
+      if (
+        selectedDateNext !== undefined &&
+        new Date(selectedDate) < new Date(date.date)
+      ) {
+        setSelectedDate(new Date(date.date));
+        setSelectedDateNext("");
+      } else {
+        setSelectedDate(new Date(date.date));
+      }
 
       props.setactiveTrip("return");
     } else if (props.activeTrip === "return") {
       setSelectedDateNext(new Date(date.date));
     }
   };
-
-
 
   const isCurrentDateActive = (crdate) => {
     const currentDate = new Date(); // Get the current date
@@ -311,10 +331,10 @@ export default function Calendar(props) {
   };
 
   const onJourneyDays = (days) => {
-    if (selectedDate !== undefined) {
+    if (selectedDate !== undefined && selectedDateNext !== undefined) {
       // Convert the other date string to a Date object
       const currentDate = createDateFromString(selectedDate);
-      const otherDateObj = createDateFromString(days.date);
+      const otherDateObj = createDateFromString(selectedDateNext);
 
       const timeDifference = otherDateObj - currentDate;
 
@@ -322,7 +342,7 @@ export default function Calendar(props) {
       const millisecondsInADay = 1000 * 60 * 60 * 24; // 1 day = 24 hours * 60 minutes * 60 seconds * 1000 milliseconds
       const differenceInDays = Math.floor(timeDifference / millisecondsInADay);
 
-      settotalDaysJourney([differenceInDays, days.date]);
+      settotalDaysJourney(differenceInDays);
     } else {
       settotalDaysJourney(null);
     }
@@ -385,7 +405,11 @@ export default function Calendar(props) {
                                 >
                                   <div className="dates_wrapper">
                                     <div
-                                      onClick={() => onSelectDate(each)}
+                                       onClick={() =>
+                                        isStartdp(each) === "disabledate" ||isCurrentDateActive(each)=== "disabledate"
+                                          ? ""
+                                          : onSelectDate(each)
+                                      }
                                       // onMouseEnter={() => {
                                       //   onJourneyDays(each);
                                       // }}
@@ -409,12 +433,11 @@ export default function Calendar(props) {
                                       isactiveReturnDate(each) ===
                                         "active_Return" && (
                                         <font>
-                                          {totalDaysJourney[0] === 0 ? (
+                                          {totalDaysJourney === 0 ? (
                                             "Same day trip"
                                           ) : (
                                             <>
-                                              {totalDaysJourney[0]}&nbsp;days
-                                              trip
+                                              {totalDaysJourney}&nbsp;days trip
                                             </>
                                           )}
                                         </font>
@@ -461,16 +484,14 @@ export default function Calendar(props) {
                                 >
                                   <div className="dates_wrapper">
                                     <div
-                                      onClick={() => onSelectDate(each)}
+                                      onClick={() =>
+                                        isStartdp(each) === "disabledate" ||isCurrentDateActive(each)=== "disabledate"
+                                          ? ""
+                                          : onSelectDate(each)
+                                      }
                                       className={`dates ${isActivemonthDays(
                                         each
                                       )}`}
-                                      // onMouseEnter={() => {
-                                      //   onJourneyDays(each);
-                                      // }}
-                                      // onMouseLeave={() => {
-                                      //   onJourneyDays(each);
-                                      // }}
                                     >
                                       <span
                                         className={`${activeDate(
@@ -485,12 +506,11 @@ export default function Calendar(props) {
                                       isactiveReturnDate(each) ===
                                         "active_Return" && (
                                         <font>
-                                          {totalDaysJourney[0] === 0 ? (
+                                          {totalDaysJourney === 0 ? (
                                             "Same day trip"
                                           ) : (
                                             <>
-                                              {totalDaysJourney[0]}&nbsp;days
-                                              trip
+                                              {totalDaysJourney}&nbsp;days trip
                                             </>
                                           )}
                                         </font>
@@ -515,7 +535,7 @@ export default function Calendar(props) {
               </table>
             </div>
           </div>
-          <div style={{ padding: 10 }}>
+          <div style={{ padding: "10px", marginTop: "20px" }}>
             Selected Date: {getFormattedDate(selectedDate)}
           </div>
         </div>
