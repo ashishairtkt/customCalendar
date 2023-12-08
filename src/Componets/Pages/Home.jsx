@@ -1,16 +1,15 @@
-import React, { useState } from "react";
-import { Container, Row, Col } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Container, Row, Col, Form } from "react-bootstrap";
 import Calendar from "./Calendar/Calendar";
 
 export default function Home() {
- 
-
   const [activeTrip, setactiveTrip] = useState("depart");
   const [restState, setrestState] = useState(false);
   const [dpDate, setDpDate] = useState();
   const [rtDate, setRtDate] = useState();
   const [totalDaysJourney, settotalDaysJourney] = useState();
 
+  const [totalYearMonth, settotalYearMonth] = useState([]);
   const handleActiveTrip = (type) => {
     if (type === "dp") setactiveTrip("depart");
     else setactiveTrip("return");
@@ -54,7 +53,71 @@ export default function Home() {
     setactiveTrip("depart");
     setrestState(true);
   };
+  function MonthYearSelector({ twelveMonthsArray }) {
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [filteredMonths, setFilteredMonths] = useState([]);
 
+    // Populate the year select dropdown
+    const populateYearSelect = () => {
+      const uniqueYears = [
+        ...new Set(
+          twelveMonthsArray.map((month) => parseInt(month.split(" ")[1]))
+        ),
+      ];
+      return (
+        <Form.Select
+          aria-label="Default select example"
+          id="yearSelect"
+          onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+          value={selectedYear || ""}
+        >
+          <option value="">Select Year</option>
+          {uniqueYears.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </Form.Select>
+      );
+    };
+
+    // Update months based on selected year
+    useEffect(() => {
+      if (selectedYear) {
+        const monthsOfYear = twelveMonthsArray.filter(
+          (month) => parseInt(month.split(" ")[1]) === selectedYear
+        );
+        setFilteredMonths(monthsOfYear);
+      }
+    }, [selectedYear, twelveMonthsArray]);
+
+    // Display months select dropdown
+    const displayMonthSelect = () => {
+      return (
+        <Form.Select
+          aria-label="Default select example"
+          id="monthSelect"
+          disabled={!selectedYear}
+        >
+          <option value="">Select Month</option>
+          {filteredMonths.map((month) => (
+            <option key={month} value={month}>
+              {month}
+            </option>
+          ))}
+        </Form.Select>
+      );
+    };
+
+    return (
+      <div  style={{    display: "flex",
+      alignItems: "center",
+      gap: "5px"}}>
+        {populateYearSelect()}
+        {displayMonthSelect()}
+      </div>
+    );
+  }
   return (
     <Container>
       <Row>
@@ -129,6 +192,7 @@ export default function Home() {
                 setrestState={setrestState}
                 settotalDaysJourney={settotalDaysJourney}
                 totalDaysJourney={totalDaysJourney}
+                settotalYearMonth={settotalYearMonth}
               />
             </div>
 
@@ -148,19 +212,14 @@ export default function Home() {
                   )}
               </div>
 
-              <div>
+              <div
+                style={{ display: "flex", alignItems: "center", gap: "5px" }}
+              >
                 Current month:{" "}
-                <Select
-                  id="cars"
-                  name="cars"
-                  options={carOptions}
-                  onChange={handleCarChange}
-                />{" "}
-                <Select
-                  id="cars"
-                  name="cars"
-                  options={carOptions}
-                  onChange={handleCarChange}
+                <MonthYearSelector
+                  twelveMonthsArray={
+                    totalYearMonth !== undefined && totalYearMonth
+                  }
                 />
               </div>
 

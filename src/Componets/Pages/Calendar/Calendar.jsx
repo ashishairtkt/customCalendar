@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getCalendar } from "@skolacode/calendar-js";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
-const months = [
+let months = [
   "January",
   "February",
   "March",
@@ -36,8 +36,38 @@ export default function Calendar(props) {
     month: new Date().getMonth(),
     year: new Date().getFullYear(),
   });
+
   const [calendarValueNext, setCalendarNext] = useState();
 
+  /*----------------------------------------------------------------*/
+  function generateNextTwelveMonths(startMonth, startYear) {
+    const result = [];
+    let currentMonth = startMonth;
+    let currentYear = startYear;
+
+    for (let i = 0; i < 12; i++) {
+      result.push(months[currentMonth] + " " + currentYear);
+      currentMonth++;
+      if (currentMonth === 12) {
+        currentMonth = 0;
+        currentYear++;
+      }
+    }
+
+    return result;
+  }
+
+  // Example: Starting from February 2024, generate the next 12 months
+
+  useEffect(() => {
+    const startingMonth = new Date().getMonth(); // February (0-indexed)
+    const startingYear = new Date().getFullYear();
+    props.settotalYearMonth(
+      generateNextTwelveMonths(startingMonth, startingYear)
+    );
+  }, []);
+
+  /*----------------------------------------------------------------*/
   useEffect(() => {
     if (props.restState) {
       setSelectedDate("");
@@ -218,8 +248,6 @@ export default function Calendar(props) {
     }
   }, [calendarValue]);
 
-
-  console.log(NextMonthdates,"NextMonthdates",calendarValueNext)
   const onClickNext = () => {
     let currentDate = new Date();
 
@@ -391,7 +419,7 @@ export default function Calendar(props) {
 
                   {currentMonthdates.length > 0 &&
                     currentMonthdates.map((week) => (
-                      <tr>
+                      <tr key={Math.random()}>
                         {week.map((each, index) => {
                           return days.map((day, indexone) => {
                             if (
@@ -400,13 +428,15 @@ export default function Calendar(props) {
                             ) {
                               return (
                                 <td
-                                  key={JSON.stringify(each)}
+                                  key={Math.random()}
                                   className={`${isStartdp(each)} `}
                                 >
                                   <div className="dates_wrapper">
                                     <div
-                                       onClick={() =>
-                                        isStartdp(each) === "disabledate" ||isCurrentDateActive(each)=== "disabledate"
+                                      onClick={() =>
+                                        isStartdp(each) === "disabledate" ||
+                                        isCurrentDateActive(each) ===
+                                          "disabledate"
                                           ? ""
                                           : onSelectDate(each)
                                       }
@@ -470,7 +500,7 @@ export default function Calendar(props) {
 
                   {NextMonthdates.length > 0 &&
                     NextMonthdates.map((week) => (
-                      <tr>
+                      <tr key={Math.random()}>
                         {week.map((each, index) => {
                           return days.map((day, indexone) => {
                             if (
@@ -479,13 +509,15 @@ export default function Calendar(props) {
                             ) {
                               return (
                                 <td
-                                  key={JSON.stringify(each)}
+                                  key={Math.random()}
                                   className={`${isStartdp(each)}`}
                                 >
                                   <div className="dates_wrapper">
                                     <div
                                       onClick={() =>
-                                        isStartdp(each) === "disabledate" ||isCurrentDateActive(each)=== "disabledate"
+                                        isStartdp(each) === "disabledate" ||
+                                        isCurrentDateActive(each) ===
+                                          "disabledate"
                                           ? ""
                                           : onSelectDate(each)
                                       }
