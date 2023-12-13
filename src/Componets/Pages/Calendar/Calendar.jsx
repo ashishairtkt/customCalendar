@@ -27,18 +27,17 @@ function getFormattedDate(dateString) {
   return date.toLocaleDateString("en-US", options);
 }
 export default function Calendar(props) {
-  const { totalDaysJourney, settotalDaysJourney } = props;
+  const { totalDaysJourney, settotalDaysJourney ,calendarValue,setCalendar , selectedYear,
+  selectedMonth} = props;
   const [selectedDate, setSelectedDate] = useState();
   const [selectedDateNext, setSelectedDateNext] = useState();
   const [currentMonthdates, setcurrentMonthDates] = useState([]);
   const [NextMonthdates, setNextMonthdates] = useState([]);
-  const [calendarValue, setCalendar] = useState({
-    month: new Date().getMonth(),
-    year: new Date().getFullYear(),
-  });
+
 
   const [calendarValueNext, setCalendarNext] = useState();
 
+  console.log(selectedYear, selectedMonth);
   /*----------------------------------------------------------------*/
   function generateNextTwelveMonths(startMonth, startYear) {
     const result = [];
@@ -205,6 +204,30 @@ export default function Calendar(props) {
     ]; // Arrange in the required order
     return outputArray;
   }
+
+  useEffect(() => {
+if(selectedMonth!==  undefined){
+
+  console.log( months.findIndex((month) => month ==selectedMonth.split(" ")[0]) ,"fff",selectedMonth.split(" ")[0] )
+  const { calendar, month, next, previous, year } = getCalendar(
+    months.findIndex((month) => month ==selectedMonth.split(" ")[0]) ,
+    selectedYear
+  );
+
+  setcurrentMonthDates([...calendar]);
+  setCalendar({
+    ...calendarValue,
+    month,
+    next,
+    previous,
+    year,
+  });
+}
+    
+  }, [props.selectedYear,props.selectedMonth]);
+
+  // console.log(calendarValue,"calendarValue")
+
   useEffect(() => {
     const body = {
       month: new Date().getMonth(),
