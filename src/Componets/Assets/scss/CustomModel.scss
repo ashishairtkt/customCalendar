@@ -1,0 +1,103 @@
+/* CustomModel.css */
+body {
+    position: relative;
+    overflow: hidden;
+    margin: 0;
+   
+  }
+  
+  .custom-model-container {
+    position: relative;
+  }
+  
+  .custom-model-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: none;
+    -ms-touch-action: none;
+  }
+  
+  .custom-model-content {
+    background: #fff;
+    width: 80%;
+    max-width: 600px;
+    text-align: center;
+    position: relative;
+    max-height: 70vh;
+    overflow-y: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .header {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:  #f4f4f4;
+    border-bottom: 1px dashed #e1e1e1;
+  }
+  
+  .title-text {
+    font-size: 20px;
+    font-weight: 600;
+    color: #3765af;
+  }
+  
+  .close-btn {
+    cursor: pointer;
+    font-size: 24px;
+    color: #333;
+    transition: color 0.3s ease; /* Smooth color transition on hover */
+  }
+  
+  .close-btn:hover {
+    color: #f00;
+  }
+  
+  .middle-content {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  .footer {
+    padding: 10px;
+    border-top: 1px dashed #e1e1e1;
+    text-align: end;
+    background-color:  #f4f4f4;
+  }
+  
+  /* Style for buttons */
+  .footer button {
+    margin: 0 5px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4caf50;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .footer button:hover {
+    background-color: #45a049;
+  }
+  
+  /* Media Queries for responsiveness */
+  @media screen and (max-width: 768px) {
+    .custom-model-content {
+      width: 90%;
+      max-width: 90%;
+    }
+  }
+  

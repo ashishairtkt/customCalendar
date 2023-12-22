@@ -5,6 +5,7 @@ import "./App.scss";
 import Home from "./Componets/Pages/Home";
 import Slider from "./Componets/Pages/Slider/Slider";
 import LandingPage from "./Componets/Pages/LandingPage/LandingPage";
+import CustomModel from "./Componets/Pages/CustomModel/CustomModel";
 export default function App() {
   return (
     <div>
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/Home" element={<Home />} />
           <Route path="/Slider" element={<Slider />} />
           <Route path="/LandingPage" element={<LandingPage />} />
+          <Route path="/CustomModel" element={<CustomModel />} />
         </Routes>
       </BrowserRouter>
     </div>

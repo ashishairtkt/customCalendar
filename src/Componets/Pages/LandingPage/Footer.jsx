@@ -4,13 +4,13 @@ export default function Footer() {
   return (
     <footer>
 
-      <div class="footer-bottom">
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-5">
-              <p class="copyright text-uppercase">Copyright © 2018</p>
+      <div className="footer-bottom">
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-5">
+              <p className="copyright text-uppercase">Copyright © 2018</p>
             </div>
-            <div class="col-sm-7">
+            <div className="col-sm-7">
               <ul>
                 <li>
                   <a href="#">Home</a>

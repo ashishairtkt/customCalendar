@@ -1,6 +1,7 @@
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
+import ImageComponent from './ImageCompo';
 
 function Main() {
   return (
@@ -8,7 +9,7 @@ function Main() {
       {Array.from({ length: 2 }).map((_, idx) => (
         <Col key={idx}>
           <Card>
-            <Card.Img variant="top" src="holder.js/100px160" />
+          <img  src='https://cdn.airfuture.com/img/air-sg/TK.svg' alt="s"style={{width:"100px"}}  />
             <Card.Body>
               <Card.Title>Card title</Card.Title>
               <Card.Text>
@@ -20,6 +21,8 @@ function Main() {
           </Card>
         </Col>
       ))}
+
+    <ImageComponent />
     </Row>
   );
 }

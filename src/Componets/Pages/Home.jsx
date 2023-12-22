@@ -1,6 +1,26 @@
 import React, { useState, useEffect } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import Calendar from "./Calendar/Calendar";
+let months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+let currentDate = new Date();
+let day = currentDate.getDay();
+let month = currentDate.getMonth();
+let year = currentDate.getFullYear();
+let date = `${month} ${day}, ${year}`;
 
 export default function Home() {
   const [activeTrip, setactiveTrip] = useState("depart");
@@ -8,8 +28,19 @@ export default function Home() {
   const [dpDate, setDpDate] = useState();
   const [rtDate, setRtDate] = useState();
   const [totalDaysJourney, settotalDaysJourney] = useState();
-
+  const [calendarValue, setCalendar] = useState({
+    month: new Date().getMonth(),
+    year: new Date().getFullYear(),
+  });
   const [totalYearMonth, settotalYearMonth] = useState([]);
+  const [selectedYear, setSelectedYear] = useState();
+  const [selectedMonth, setselectedMonth] = useState();
+
+  useEffect(() => {
+    setSelectedYear(calendarValue.year);
+    setselectedMonth(months[calendarValue.month] + " " + calendarValue.year);
+  }, []);
+
   const handleActiveTrip = (type) => {
     if (type === "dp") setactiveTrip("depart");
     else setactiveTrip("return");
@@ -19,42 +50,14 @@ export default function Home() {
     if (activeTrip === type) return "active";
     else return "";
   };
-  const [selectedCar, setSelectedCar] = useState("");
-
-  const handleCarChange = (event) => {
-    setSelectedCar(event.target.value);
-  };
-
-  const carOptions = [
-    { value: "volvo", label: "Volvo" },
-    { value: "saab", label: "Saab" },
-    { value: "mercedes", label: "Mercedes" },
-    { value: "audi", label: "Audi" },
-  ];
-  let currentDate = new Date();
-  let day = currentDate.getDay();
-  let month = currentDate.getMonth();
-  let year = currentDate.getFullYear();
-  let date = `${month} ${day}, ${year}`;
-
-  const Select = ({ id, name, options, onChange }) => {
-    return (
-      <select id={id} name={name} onChange={onChange}>
-        {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    );
-  };
 
   const handleReset = () => {
     setactiveTrip("depart");
     setrestState(true);
   };
-  function MonthYearSelector({ twelveMonthsArray }) {
-    const [selectedYear, setSelectedYear] = useState(null);
+  const MonthYearSelector = React.memo((props) => {
+    const { twelveMonthsArray, selectedYear, selectedMonth } = props;
+
     const [filteredMonths, setFilteredMonths] = useState([]);
 
     // Populate the year select dropdown
@@ -71,7 +74,7 @@ export default function Home() {
           onChange={(e) => setSelectedYear(parseInt(e.target.value))}
           value={selectedYear || ""}
         >
-          <option value="">Select Year</option>
+          {/* <option value="">Select Year</option> */}
           {uniqueYears.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -98,11 +101,13 @@ export default function Home() {
           aria-label="Default select example"
           id="monthSelect"
           disabled={!selectedYear}
+          onChange={(e) => setselectedMonth(e.target.value)}
+          value={selectedMonth || ""}
         >
-          <option value="">Select Month</option>
+          {/* <option value="">Select Month</option> */}
           {filteredMonths.map((month) => (
             <option key={month} value={month}>
-              {month}
+              {month.split(" ")[0]}
             </option>
           ))}
         </Form.Select>
@@ -110,14 +115,12 @@ export default function Home() {
     };
 
     return (
-      <div  style={{    display: "flex",
-      alignItems: "center",
-      gap: "5px"}}>
-        {populateYearSelect()}
+      <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
         {displayMonthSelect()}
+        {populateYearSelect()}
       </div>
     );
-  }
+  });
   return (
     <Container>
       <Row>
@@ -193,6 +196,10 @@ export default function Home() {
                 settotalDaysJourney={settotalDaysJourney}
                 totalDaysJourney={totalDaysJourney}
                 settotalYearMonth={settotalYearMonth}
+                calendarValue={calendarValue}
+                setCalendar={setCalendar}
+                selectedYear={selectedYear}
+                selectedMonth={selectedMonth}
               />
             </div>
 
@@ -220,6 +227,10 @@ export default function Home() {
                   twelveMonthsArray={
                     totalYearMonth !== undefined && totalYearMonth
                   }
+                  calendarValue={calendarValue}
+                  setCalendar={setCalendar}
+                  selectedYear={selectedYear}
+                  selectedMonth={selectedMonth}
                 />
               </div>
 
